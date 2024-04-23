@@ -70,32 +70,10 @@ RegisterNetEvent('qb-cityhall:server:requestId', function(item, hall)
         info.lastname = Player.PlayerData.charinfo.lastname
         info.birthdate = Player.PlayerData.charinfo.birthdate
     else
-        return false -- DropPlayer(src, 'Attempted exploit abuse')
+        return false
     end
     if not Player.Functions.AddItem(item, 1, nil, info) then return end
     TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], 'add')
-end)
-
-RegisterNetEvent('qb-cityhall:server:sendDriverTest', function(instructors)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if not Player then return end
-    for i = 1, #instructors do
-        local citizenid = instructors[i]
-        local SchoolPlayer = QBCore.Functions.GetPlayerByCitizenId(citizenid)
-        if SchoolPlayer then
-            TriggerClientEvent('qb-cityhall:client:sendDriverEmail', SchoolPlayer.PlayerData.source, Player.PlayerData.charinfo)
-        else
-            local mailData = {
-                sender = 'Township',
-                subject = 'Driving lessons request',
-                message = 'Hello,<br><br>We have just received a message that someone wants to take driving lessons.<br>If you are willing to teach, please contact them:<br>Name: <strong>' .. Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. '<br />Phone Number: <strong>' .. Player.PlayerData.charinfo.phone .. '</strong><br><br>Kind regards,<br>Township Los Santos',
-                button = {}
-            }
-            exports['qb-phone']:sendNewMailToOffline(citizenid, mailData)
-        end
-    end
-    TriggerClientEvent('QBCore:Notify', src, 'An email has been sent to driving schools, and you will be contacted automatically', 'success', 5000)
 end)
 
 RegisterNetEvent('qb-cityhall:server:ApplyJob', function(job, cityhallCoords)
